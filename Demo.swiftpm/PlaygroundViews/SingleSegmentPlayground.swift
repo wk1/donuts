@@ -1,14 +1,14 @@
 import SwiftUI
 import Donuts
 
-struct DonutPlayground: View {
+struct SingleSegmentPlayground: View {
     @State private var ratio: CGFloat = 0.1
     @State private var sweep: CGFloat = 0.70
     @State private var cornerRadius: CGFloat = 42
     @State private var start: Angle = .zero
-    @Binding var debug: Bool
+    @State var debug: Bool = false
     
-    public var body: some View {
+    var body: some View {
         VStack {
             ZStack {
                 if debug {

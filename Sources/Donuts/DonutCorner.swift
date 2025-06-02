@@ -7,6 +7,8 @@ struct DonutCorner {
     let cornerCenter: CGPoint
     let leadingTangent: CGPoint
     let trailingTangent: CGPoint
+    var cornerStartAngle: CGFloat
+    var cornerEndAngle: CGFloat
     
     init(
         center: CGPoint,
@@ -31,13 +33,23 @@ struct DonutCorner {
         // Berührungspunkt mit Kante
         let tangentAngle = edge.calcTangentAngle(for: angle)
         self.trailingTangent = .onArc(center: cornerCenter, radius: cornerRadius, angle: tangentAngle)
+        
+        cornerStartAngle = atan2(leadingTangent.y - cornerCenter.y, leadingTangent.x - cornerCenter.x)
+        cornerEndAngle = atan2(trailingTangent.y - cornerCenter.y, trailingTangent.x - cornerCenter.x)
+        
+        if rim == .inner && edge == .trailing || rim == .outer && edge == .leading {
+            swap(&cornerStartAngle, &cornerEndAngle)
+        }
     }
     
-    func addCornerArc(to path: inout Path, reverse: Bool = false) {
-        let startAngle = atan2(leadingTangent.y - cornerCenter.y, leadingTangent.x - cornerCenter.x)
-        let endAngle = atan2(trailingTangent.y - cornerCenter.y, trailingTangent.x - cornerCenter.x)
-        path.addArc(center: cornerCenter, radius: radius,
-                    startAngle: reverse ? .radians(endAngle) : .radians(startAngle), endAngle: reverse ? .radians(startAngle) : .radians(endAngle), clockwise: false)
+    func addCornerArc(to path: inout Path) {
+        path.addArc(
+            center: cornerCenter,
+            radius: radius,
+            startAngle: .radians(cornerStartAngle),
+            endAngle: .radians(cornerEndAngle),
+            clockwise: false
+        )
     }
     
     
