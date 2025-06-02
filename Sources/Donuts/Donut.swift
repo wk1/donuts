@@ -98,7 +98,7 @@ public struct Donut: Shape {
         g.trailingEdgeOuterRim.addCornerArc(to: &path)
         
         if ratio > 0 {
-            g.trailingEdgeInnerRim.addCornerArc(to: &path, reverse: true)
+            g.trailingEdgeInnerRim.addCornerArc(to: &path)
             
             path.addArc(
                 center: g.center,
@@ -108,12 +108,12 @@ public struct Donut: Shape {
                 clockwise: true
             )
             
-            g.leadingEdgeInnerRim.addCornerArc(to: &path, reverse: false)
+            g.leadingEdgeInnerRim.addCornerArc(to: &path)
         } else {
             path.addLine(to: g.center)
             path.addLine(to: g.leadingEdgeOuterRim.trailingTangent)
         }
         
-        g.leadingEdgeOuterRim.addCornerArc(to: &path, reverse: true)
+        g.leadingEdgeOuterRim.addCornerArc(to: &path)
     }
 }
