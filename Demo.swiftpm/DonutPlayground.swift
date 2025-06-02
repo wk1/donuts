@@ -105,7 +105,7 @@ struct DonutPlayground: View {
             PieChartView()
                 .frame(width: 300, height: 300)
                 .tabItem {
-                    Label("Pie Chart", systemImage: "chart.pie")
+                    Label("Multi Segment", systemImage: "chart.pie")
                 }
         }
         
