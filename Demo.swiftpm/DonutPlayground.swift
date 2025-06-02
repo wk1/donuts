@@ -1,17 +1,11 @@
-//
-//  DonutPlayground.swift
-//  Demo
-//
-//  Created by Christian Hoock on 01.06.25.
-//
 import SwiftUI
 import Donuts
 
 struct DonutPlayground: View {
-    @State private var innerRadiusRatio: CGFloat = 0.1
+    @State private var ratio: CGFloat = 0.1
     @State private var sweep: CGFloat = 0.70
     @State private var cornerRadius: CGFloat = 42
-    @State private var startAngle: Double = 0
+    @State private var start: Angle = .zero
     @Binding var debug: Bool
     
     public var body: some View {
@@ -19,19 +13,19 @@ struct DonutPlayground: View {
             ZStack {
                 if debug {
                     Donut(
-                        innerRadiusRatio: innerRadiusRatio,
-                        startAngle: startAngle,
+                        start: start,
+                        ratio: ratio,
                         sweep: sweep,
-                        cornerRadius: 0,
+                        desiredCornerRadius: 0,
                         debug: .constant(false)
                     )
                     .stroke(.green, lineWidth: 1)
                 }
                 Donut(
-                    innerRadiusRatio: innerRadiusRatio,
-                    startAngle: startAngle,
+                    start: start,
+                    ratio: ratio,
                     sweep: sweep,
-                    cornerRadius: cornerRadius,
+                    desiredCornerRadius: cornerRadius,
                     debug: $debug
                 )
                 .if(debug) { content in
@@ -62,23 +56,42 @@ struct DonutPlayground: View {
                 }
                 .tint(.accentColor)
                 HStack {
-                    Text("Inner Radius Ratio: \(innerRadiusRatio, specifier: "%.2f")")
-                    Slider(value: $innerRadiusRatio, in: 0...1.0)
+                    Text("Sweep: \(sweep, specifier: "%.2f")")
+                    Slider(
+                        value: $sweep,
+                        in: 0.00...1.0,
+                        label: { Text("Sweep: \(sweep, specifier: "%.2f")") }
+                    )
                 }
                 
                 HStack {
-                    Text("Sweep: \(sweep, specifier: "%.2f")")
-                    Slider(value: $sweep, in: 0.00...1.0)
+                    Text("Ratio: \(ratio, specifier: "%.2f")")
+                    Slider(
+                        value: $ratio,
+                        in: 0...1.0,
+                        label: { Text("Ratio: \(ratio, specifier: "%.2f")") }
+                    )
                 }
                 
                 HStack {
                     Text("Corner Radius: \(cornerRadius, specifier: "%.0f")")
-                    Slider(value: $cornerRadius, in: 0...100)
+                    Slider(
+                        value: $cornerRadius,
+                        in: 0...100,
+                        label: { Text("Corner Radius: \(cornerRadius, specifier: "%.0f")") }
+                    )
                 }
                 
                 HStack {
-                    Text("Start Angle: \(startAngle * 180 / .pi, specifier: "%.0f")°")
-                    Slider(value: $startAngle, in: 0...(2 * .pi))
+                    Text("Start Angle: \(start.degrees, specifier: "%.0f")°")
+                    Slider(
+                        value: Binding(
+                            get: { start.degrees },
+                            set: { newDegrees in start = .degrees(newDegrees) }
+                        ),
+                        in: 0...360,
+                        label: { Text("Start Angle: \(start.degrees, specifier: "%.0f")°") }
+                    )
                 }
             }
             .padding()
