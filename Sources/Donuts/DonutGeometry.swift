@@ -11,6 +11,7 @@ struct DonutGeometry {
         radius: CGFloat,
         innerRadius: CGFloat,
         cornerRadius: CGFloat,
+        limitRadiusWidthOnClose: Bool,
         start: Angle,
         sweep: CGFloat
     ) {
@@ -27,14 +28,16 @@ struct DonutGeometry {
             sweep: sweep,
             outerRadius: radius,
             innerRadius: innerRadius,
-            for: .inner
+            for: .inner,
+            limitRadiusWidthOnClose: limitRadiusWidthOnClose
         )
         let maxOuterCornerRadius = DonutMath.maxCornerRadius(
             desired: cornerRadius,
             sweep: sweep,
             outerRadius: radius,
             innerRadius: innerRadius,
-            for: .outer
+            for: .outer,
+            limitRadiusWidthOnClose: limitRadiusWidthOnClose
         )
         
         self.leadingEdgeOuterRim = DonutCorner(

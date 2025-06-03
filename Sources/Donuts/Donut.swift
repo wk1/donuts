@@ -5,6 +5,7 @@ public struct Donut: Shape {
     let ratio: CGFloat
     let sweep: CGFloat
     let desiredCornerRadius: CGFloat
+    let limitRadiusWidthOnClose: Bool
     
     @Binding var debug: Bool
     
@@ -13,12 +14,14 @@ public struct Donut: Shape {
         ratio: CGFloat = 0.5,
         sweep: CGFloat = 1.0,
         desiredCornerRadius: CGFloat = 0,
+        limitRadiusWidthOnClose: Bool = true,
         debug: Binding<Bool> = .constant(false)
     ) {
         self.start = start
         self.ratio = ratio
         self.sweep = sweep
         self.desiredCornerRadius = desiredCornerRadius
+        self.limitRadiusWidthOnClose = limitRadiusWidthOnClose
         
         self._debug = debug
     }
@@ -64,6 +67,7 @@ public struct Donut: Shape {
             radius: radius,
             innerRadius: innerRadius,
             cornerRadius: desiredCornerRadius,
+            limitRadiusWidthOnClose: limitRadiusWidthOnClose,
             start: start,
             sweep: sweep
         )

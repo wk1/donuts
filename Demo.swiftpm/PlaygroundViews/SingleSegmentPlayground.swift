@@ -7,6 +7,7 @@ struct SingleSegmentPlayground: View {
     @State private var cornerRadius: CGFloat = 42
     @State private var start: Angle = .zero
     @State var debug: Bool = false
+    @State var limitCornerRadiusWidthOnClose: Bool = true
     
     var body: some View {
         VStack {
@@ -17,6 +18,7 @@ struct SingleSegmentPlayground: View {
                         ratio: ratio,
                         sweep: sweep,
                         desiredCornerRadius: 0,
+                        limitRadiusWidthOnClose: limitCornerRadiusWidthOnClose,
                         debug: .constant(false)
                     )
                     .stroke(.green, lineWidth: 1)
@@ -26,6 +28,7 @@ struct SingleSegmentPlayground: View {
                     ratio: ratio,
                     sweep: sweep,
                     desiredCornerRadius: cornerRadius,
+                    limitRadiusWidthOnClose: limitCornerRadiusWidthOnClose,
                     debug: $debug
                 )
                 .if(debug) { content in
@@ -53,6 +56,10 @@ struct SingleSegmentPlayground: View {
             VStack(alignment: .leading, spacing: 10) {
                 Toggle(isOn: $debug) {
                     Text("Debug Mode")
+                }
+                .tint(.accentColor)
+                Toggle(isOn: $limitCornerRadiusWidthOnClose) {
+                    Text("Limit Corner Radius Width on Close")
                 }
                 .tint(.accentColor)
                 HStack {

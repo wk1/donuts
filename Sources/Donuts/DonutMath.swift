@@ -148,7 +148,8 @@ struct DonutMath {
         sweep: CGFloat,
         outerRadius: CGFloat,
         innerRadius: CGFloat,
-        for rim: DonutRim
+        for rim: DonutRim,
+        limitRadiusWidthOnClose: Bool = true
     ) -> CGFloat {
         let halfSweepRadians = sweep * .pi
         let sinHalfSweep = sin(halfSweepRadians)
@@ -157,12 +158,16 @@ struct DonutMath {
         let maxThicknessRadius = (outerRadius - innerRadius) / 2
         
         let maxWidthRadius: CGFloat
-        if rim == .inner {
-            // For inner rim: corner width is limited by inner circumference
-            maxWidthRadius = innerRadius * sinHalfSweep / (1 - sinHalfSweep)
+        if sweep > 0.5 && !limitRadiusWidthOnClose {
+            maxWidthRadius = .infinity
         } else {
-            // For outer rim: corner width is limited by outer circumference
-            maxWidthRadius = outerRadius * sinHalfSweep / (1 + sinHalfSweep)
+            if rim == .inner {
+                // For inner rim: corner width is limited by inner circumference
+                maxWidthRadius = innerRadius * sinHalfSweep / (1 - sinHalfSweep)
+            } else {
+                // For outer rim: corner width is limited by outer circumference
+                maxWidthRadius = outerRadius * sinHalfSweep / (1 + sinHalfSweep)
+            }
         }
         
         return min(desiredRadius, maxThicknessRadius, maxWidthRadius)
