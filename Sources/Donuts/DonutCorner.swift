@@ -20,10 +20,15 @@ struct DonutCorner {
     ) {
         self.radius = cornerRadius
         self.angle = angle
-        // Ecken-Winkel berechnen
-        self.insettedAngle = edge.calcInsettedAngle(for: angle, radius: radius, cornerRadius: cornerRadius, rim: rim)
         
-        // Ecken-Zentrum
+        self.insettedAngle = DonutMath.insettedAngle(
+            for: angle,
+            radius: radius,
+            cornerRadius: cornerRadius,
+            rim: rim,
+            edge: edge
+        )
+        
         self.cornerCenter = DonutMath.cornerCenter(
             center: center,
             radius: radius,
@@ -31,20 +36,31 @@ struct DonutCorner {
             insettedAngle: insettedAngle,
             rim: rim
         )
-        
-        // Punkte auf Bögen
-        self.leadingTangent = DonutMath.pointOnCircle(center: center, radius: radius, angle: insettedAngle)
+
+        self.leadingTangent = DonutMath.arcTangentPoint(
+            center: center,
+            radius: radius,
+            insettedAngle: insettedAngle
+        )
         
         // Berührungspunkt mit Kante
-        let tangentAngle = edge.calcTangentAngle(for: angle)
-        self.trailingTangent = DonutMath.pointOnCircle(center: cornerCenter, radius: cornerRadius, angle: tangentAngle)
+        let tangentAngle = DonutMath.tangentAngle(for: angle, edge: edge)
+        self.trailingTangent = DonutMath.edgeTangentPoint(
+            cornerCenter: cornerCenter,
+            cornerRadius: cornerRadius,
+            tangentAngle: tangentAngle
+        )
         
-        cornerStartAngle = atan2(leadingTangent.y - cornerCenter.y, leadingTangent.x - cornerCenter.x)
-        cornerEndAngle = atan2(trailingTangent.y - cornerCenter.y, trailingTangent.x - cornerCenter.x)
+        let angles = DonutMath.cornerArcAngles(
+            cornerCenter: cornerCenter,
+            leadingTangent: leadingTangent,
+            trailingTangent: trailingTangent,
+            edge: edge,
+            rim: rim
+        )
         
-        if rim == .inner && edge == .trailing || rim == .outer && edge == .leading {
-            swap(&cornerStartAngle, &cornerEndAngle)
-        }
+        self.cornerStartAngle = angles.start
+        self.cornerEndAngle = angles.end
     }
     
     func addCornerArc(to path: inout Path) {
