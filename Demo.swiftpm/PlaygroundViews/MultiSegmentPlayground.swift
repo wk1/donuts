@@ -74,6 +74,7 @@ struct MultiSegmentPlayground: View {
                         Divider()
                         //reflection
                         Toggle("Show Reflection", isOn: $showReflection)
+                            .tint(.accentColor)
                         Group {
                             Text("Reflection Opacity: \(reflectionOpacity, specifier: "%.2f")")
                             Slider(value: $reflectionOpacity, in: 0.0...1.0)
@@ -86,6 +87,7 @@ struct MultiSegmentPlayground: View {
                     
                     Group {
                         Toggle("Fixed Segment Width", isOn: $useFixedSegmentWidth)
+                            .tint(.accentColor)
                         
                         if useFixedSegmentWidth {
                             HStack {
@@ -97,6 +99,7 @@ struct MultiSegmentPlayground: View {
                         Divider()
                         
                         Toggle("Fixed Gap Width", isOn: $useFixedGapWidth)
+                            .tint(.accentColor)
                         
                         if useFixedGapWidth {
                             HStack {
