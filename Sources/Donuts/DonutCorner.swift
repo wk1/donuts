@@ -24,8 +24,13 @@ struct DonutCorner {
         self.insettedAngle = edge.calcInsettedAngle(for: angle, radius: radius, cornerRadius: cornerRadius, rim: rim)
         
         // Ecken-Zentrum
-        let distance =  rim == .outer ? radius - cornerRadius : radius + cornerRadius
-        self.cornerCenter = DonutMath.pointOnCircle(center: center, radius: distance, angle: insettedAngle)
+        self.cornerCenter = DonutMath.cornerCenter(
+            center: center,
+            radius: radius,
+            cornerRadius: cornerRadius,
+            insettedAngle: insettedAngle,
+            rim: rim
+        )
         
         // Punkte auf Bögen
         self.leadingTangent = DonutMath.pointOnCircle(center: center, radius: radius, angle: insettedAngle)

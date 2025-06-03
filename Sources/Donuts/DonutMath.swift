@@ -18,4 +18,23 @@ struct DonutMath {
             y: center.y + radius * CGFloat(sin(angle.radians))
         )
     }
+    
+    /// Calculates the center point of a corner arc
+    /// - Parameters:
+    ///   - center: Center of the main donut
+    ///   - radius: Radius of the main arc (outer or inner)
+    ///   - cornerRadius: Radius of the corner arc
+    ///   - insettedAngle: The angle adjusted for the corner inset
+    ///   - rim: Whether this is on the outer or inner rim
+    /// - Returns: Center point of the corner arc
+    static func cornerCenter(
+        center: CGPoint,
+        radius: CGFloat,
+        cornerRadius: CGFloat,
+        insettedAngle: Angle,
+        rim: DonutRim
+    ) -> CGPoint {
+        let distance = rim == .outer ? radius - cornerRadius : radius + cornerRadius
+        return pointOnCircle(center: center, radius: distance, angle: insettedAngle)
+    }
 }
