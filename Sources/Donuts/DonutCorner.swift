@@ -25,14 +25,14 @@ struct DonutCorner {
         
         // Ecken-Zentrum
         let distance =  rim == .outer ? radius - cornerRadius : radius + cornerRadius
-        self.cornerCenter = .onArc(center: center, radius: distance, angle: insettedAngle)
+        self.cornerCenter = DonutMath.pointOnCircle(center: center, radius: distance, angle: insettedAngle)
         
         // Punkte auf Bögen
-        self.leadingTangent = .onArc(center: center, radius: radius, angle: insettedAngle)
+        self.leadingTangent = DonutMath.pointOnCircle(center: center, radius: radius, angle: insettedAngle)
         
         // Berührungspunkt mit Kante
         let tangentAngle = edge.calcTangentAngle(for: angle)
-        self.trailingTangent = .onArc(center: cornerCenter, radius: cornerRadius, angle: tangentAngle)
+        self.trailingTangent = DonutMath.pointOnCircle(center: cornerCenter, radius: cornerRadius, angle: tangentAngle)
         
         cornerStartAngle = atan2(leadingTangent.y - cornerCenter.y, leadingTangent.x - cornerCenter.x)
         cornerEndAngle = atan2(trailingTangent.y - cornerCenter.y, trailingTangent.x - cornerCenter.x)
