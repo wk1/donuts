@@ -10,7 +10,7 @@ struct DonutGeometry {
         center: CGPoint,
         radius: CGFloat,
         innerRadius: CGFloat,
-        cornerRadius: DonutCornerRadius,
+        cornerRadius: CGFloat,
         start: Angle,
         sweep: CGFloat
     ) {
@@ -22,10 +22,25 @@ struct DonutGeometry {
         let sweepAngle = Angle.degrees(sweep * 360)
         let end = start + sweepAngle
         
+        let maxInnerCornerRadius = DonutMath.maxCornerRadius(
+            desired: cornerRadius,
+            sweep: sweep,
+            outerRadius: radius,
+            innerRadius: innerRadius,
+            for: .inner
+        )
+        let maxOuterCornerRadius = DonutMath.maxCornerRadius(
+            desired: cornerRadius,
+            sweep: sweep,
+            outerRadius: radius,
+            innerRadius: innerRadius,
+            for: .outer
+        )
+        
         self.leadingEdgeOuterRim = DonutCorner(
             center: center,
             radius: radius,
-            cornerRadius: cornerRadius.max(for: .outer),
+            cornerRadius: maxOuterCornerRadius,
             angle: start,
             edge: .leading,
             rim: .outer
@@ -33,7 +48,7 @@ struct DonutGeometry {
         self.leadingEdgeInnerRim = DonutCorner(
             center: center,
             radius: innerRadius,
-            cornerRadius: cornerRadius.max(for: .inner),
+            cornerRadius: maxInnerCornerRadius,
             angle: start,
             edge: .leading,
             rim: .inner
@@ -41,7 +56,7 @@ struct DonutGeometry {
         self.trailingEdgeOuterRim = DonutCorner(
             center: center,
             radius: radius,
-            cornerRadius: cornerRadius.max(for: .outer),
+            cornerRadius: maxOuterCornerRadius,
             angle: end,
             edge: .trailing,
             rim: .outer
@@ -49,7 +64,7 @@ struct DonutGeometry {
         self.trailingEdgeInnerRim = DonutCorner(
             center: center,
             radius: innerRadius,
-            cornerRadius: cornerRadius.max(for: .inner),
+            cornerRadius: maxInnerCornerRadius,
             angle: end,
             edge: .trailing,
             rim: .inner

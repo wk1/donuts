@@ -58,19 +58,12 @@ public struct Donut: Shape {
     
     private func createDonut(center: CGPoint, radius: CGFloat, innerRadius: CGFloat) -> Path {
         var path = Path()
-
-        let calculatedCornerRadius = DonutCornerRadius(
-            desiredRadius: desiredCornerRadius,
-            sweep: sweep,
-            radius: radius,
-            innerRadius: innerRadius
-        )
         
         let geometry = DonutGeometry(
             center: center,
             radius: radius,
             innerRadius: innerRadius,
-            cornerRadius: calculatedCornerRadius,
+            cornerRadius: desiredCornerRadius,
             start: start,
             sweep: sweep
         )
