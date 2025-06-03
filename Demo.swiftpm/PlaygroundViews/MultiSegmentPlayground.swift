@@ -3,13 +3,18 @@ import Donuts
 
 struct MultiSegmentPlayground: View {
     // Configuration state
-    @State private var segmentCount = 20
-    @State private var useFixedSegmentWidth = false
-    @State private var fixedSegmentSize: CGFloat = 0.04 // 4% of full circle
-    @State private var useFixedGapWidth = false
+    @State private var segmentCount = 1
+    @State private var useFixedSegmentWidth = true
+    @State private var fixedSegmentSize: CGFloat = 0.115 // 4% of full circle
+    @State private var useFixedGapWidth = true
     @State private var fixedGapSize: CGFloat = 0.01 // 1% of full circle
     @State private var startAngle: Double = 0
     @State private var innerRadiusRatio: CGFloat = 0.8
+    @State private var cornerRadius: CGFloat = 8
+    
+    @State private var showReflection: Bool = false
+    @State private var reflectionOpacity: Double = 0.3
+    @State private var reflectionBlur: Double = 0.0
     
     var body: some View {
         VStack {
@@ -22,19 +27,21 @@ struct MultiSegmentPlayground: View {
                         start: .degrees(segmentStart),
                         ratio: innerRadiusRatio,
                         sweep: pieceSize,
-                        desiredCornerRadius: 8
+                        desiredCornerRadius: cornerRadius
                     )
                     .fill(color)
                     
-                    Donut(
-                        start: .degrees(segmentStart),
-                        ratio: innerRadiusRatio - 0.2,
-                        sweep: pieceSize,
-                        desiredCornerRadius: 8
-                    )
-                    .fill(color)
-                    .blur(radius: 2)
-                    .opacity(0.3)
+                    if showReflection {
+                        Donut(
+                            start: .degrees(segmentStart),
+                            ratio: innerRadiusRatio - 0.2,
+                            sweep: pieceSize,
+                            desiredCornerRadius: cornerRadius
+                        )
+                        .fill(color)
+                        .blur(radius: reflectionBlur)
+                        .opacity(reflectionOpacity)
+                    }
                 }
             }
             .frame(width: 300, height: 300)
@@ -51,15 +58,28 @@ struct MultiSegmentPlayground: View {
                         
                         Divider()
                         
+                        Text("Corner Radius: \(Int(cornerRadius))°")
+                        Slider(value: $cornerRadius, in: 0...35)
+                        
+                        Divider()
+                        
                         Text("Start Angle: \(Int(startAngle))°")
                         Slider(value: $startAngle, in: 0...359)
                         
                         Divider()
                         
-                        HStack {
-                            Text("Inner Radius Ratio: \(innerRadiusRatio, specifier: "%.2f")")
-                            Slider(value: $innerRadiusRatio, in: 0.1...0.9)
-                        }
+                        Text("Inner Radius Ratio: \(innerRadiusRatio, specifier: "%.2f")")
+                        Slider(value: $innerRadiusRatio, in: 0.1...0.9)
+                        
+                        Divider()
+                        //reflection
+                        Toggle("Show Reflection", isOn: $showReflection)
+                        Group {
+                            Text("Reflection Opacity: \(reflectionOpacity, specifier: "%.2f")")
+                            Slider(value: $reflectionOpacity, in: 0.0...1.0)
+                            Text("Reflection Blur: \(reflectionBlur, specifier: "%.2f")")
+                            Slider(value: $reflectionBlur, in: 0.0...35.0)
+                        }.disabled(!showReflection)
                         
                         Divider()
                     }
@@ -70,7 +90,7 @@ struct MultiSegmentPlayground: View {
                         if useFixedSegmentWidth {
                             HStack {
                                 Text("Segment Size: \(fixedSegmentSize, specifier: "%.3f")")
-                                Slider(value: $fixedSegmentSize, in: 0.001...0.2)
+                                Slider(value: $fixedSegmentSize, in: 0.000...0.2)
                             }
                         }
                         
@@ -81,7 +101,7 @@ struct MultiSegmentPlayground: View {
                         if useFixedGapWidth {
                             HStack {
                                 Text("Gap Size: \(fixedGapSize, specifier: "%.3f")")
-                                Slider(value: $fixedGapSize, in: 0.001...0.1)
+                                Slider(value: $fixedGapSize, in: 0.000...0.1)
                             }
                         }
                     }
